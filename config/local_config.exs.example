@@ -1,0 +1,9 @@
+use Mix.Config
+
+# View/trade
+config :ex_gdax,
+  api_key: {:system, "INSERT GDAX API KEY"},
+  api_secret:
+    {:system,
+     "INSERT GDAX SECRET"},
+  api_passphrase: {:system, "INSERT GDAX PASSPHRASE"}
