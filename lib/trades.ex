@@ -47,6 +47,7 @@ defmodule GDAX.Trades do
   @doc """
   Return a spot EUR valuation for this ccy holding
   """
+  def valuation(_, 0.0), do: {:ok, 0.0}
   def valuation(ccy, holding) do
     case GDAX.OrderBook.sell(ccy, holding) do
       {:ok, %{cost: value}} -> {:ok, value}
@@ -112,7 +113,11 @@ defmodule GDAX.Trades do
     {_, %{holding: holding, ccy_spot_value: value}} =
         fills |> compute_balance  |> spot_value(ccy)
 
-    cost = get_position_cost(fills, holding)
+    # holding is rounded to precision of 10 so that the function head
+    # in get_position_cost that matches on holding of 0.0 works. If not
+    # rounded here, floating point error can result in a holding of very
+    # small amt (e.g. 1e-15) which breaks things.
+    cost = get_position_cost(fills, Float.round(holding, 10))
     {ccy, holding, cost, value}
   end
 end

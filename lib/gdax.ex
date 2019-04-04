@@ -25,10 +25,15 @@ defmodule GDAX do
   def show_position(ccy) do
     {_, holding, cost, value} = GDAX.Trades.get_current_position(ccy)
     pl = value + cost
+    percentage_gain = case cost do
+        0.0 -> 0.0
+        cost -> -100*(pl/cost)
+    end
     IO.write(:stdio, [ccy, " Holding: ", fmt(holding),
                       "\n\t Cost: ", fmt(cost), " EUR",
                       "\n\t Value: ", fmt(value,2), " EUR",
-                      "\n\t P/L (% gain): ", fmt(pl, 2), " EUR (", fmt(-100*(pl/cost), 2), "%)"])
+                      "\n\t P/L (% gain): ", fmt(pl, 2), " EUR (",
+                      fmt(percentage_gain, 2), "%)"])
     IO.puts ""
   end
 
