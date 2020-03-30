@@ -29,8 +29,8 @@ feed.
 
 This project is known to work with:
 
- * Erlang 21.1.4
- * Elixir 1.7.4
+ * Erlang 21.1.4 + Elixir 1.7.4
+ * Erlang 22.2.8 + Elixir 1.10.2
 
 The author works on Linux Mint and found that the easiest way to get working
 installations of the appropriate versions of these packages was to use the
@@ -44,10 +44,10 @@ Install erlang, elixir:
 > sudo apt-get install automake autoconf libreadline-dev libncurses-dev \
                        libssl-dev libyaml-dev libxslt-dev libffi-dev libtool \
                        unixodbc-dev
-> asdf install erlang 21.1.4
-> asdf install elixir 1.7.4
-> asdf global erlang 21.1.4
-> asdf global elixir 1.7.4
+> asdf install erlang 22.2.8
+> asdf install elixir 1.10.2-otp-22
+> asdf global erlang 22.2.8
+> asdf global elixir 1.10.2-otp-22
 ```
 
 ## Compilation

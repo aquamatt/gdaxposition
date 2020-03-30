@@ -12,10 +12,7 @@ defmodule GDAX.OrderTracker do
   end
 
   def start (assets \\ ["BTC-EUR", "LTC-EUR"]) do
-    assets
-    |> Enum.map(&GDAX.AssetOrderBook.start_link(asset_key(&1)))
-    |> IO.inspect
-
+    Enum.map(assets, &GDAX.AssetOrderBook.start_link(asset_key(&1)))
     start_link(assets, ["level2"])
   end
 

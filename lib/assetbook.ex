@@ -41,10 +41,21 @@ defmodule GDAX.AssetOrderBook do
     order_book
   end
 
+  @doc """
+  Notify update handler if it is registered and listening
+  """
+  def notify(order_book) do
+    case Process.whereis(:mainthread) do
+      nil -> nil
+      pid -> send pid, "."
+    end
+    order_book
+  end
+
   def run(order_book) do
     receive do
       {:snapshot, snapshot} -> snapshot |> extract_book |> run
-      {:update, updates} -> updates |> update_book(order_book) |> run
+      {:update, updates} -> updates |> update_book(order_book) |> notify |> run
       {:getbook, caller} -> order_book |> get_book(caller) |> run
       {:getbook, caller, side} -> order_book |> get_book(caller, side) |> run
     end

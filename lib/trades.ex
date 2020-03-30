@@ -88,16 +88,17 @@ defmodule GDAX.Trades do
     Compute cost of the currently held position as sum of asset
     costs and fees. Can be used to compute effective rate.
   """
-  def get_position_cost(fills, holding), do: get_position_cost(fills, 0.0, holding)
-  def get_position_cost(_, cost, 0.0), do: cost
-  def get_position_cost([fill | rest], cost, holding) do
+  def get_position_cost(fills, holding), do: get_position_cost(fills, 0.0, 0.0, holding)
+  def get_position_cost(_, cost, fees, 0.0), do: {cost, fees}
+  def get_position_cost([fill | rest], cost, fees, holding) do
     side_multiplier = side(fill)
     # Rounding required because floating point errors at the insignificant
     # end can cause the stop condition above  to fail. Could, I guess,
     # implement a guard in the header above instead of matching on 0.0
     get_position_cost(
       rest,
-      cost+(fill.delta_eur)-fill.fee,
+      cost+(fill.delta_eur),
+      fees+fill.fee,
       Float.round(holding+(side_multiplier*fill.size), 10)
     )
   end
@@ -117,7 +118,7 @@ defmodule GDAX.Trades do
     # in get_position_cost that matches on holding of 0.0 works. If not
     # rounded here, floating point error can result in a holding of very
     # small amt (e.g. 1e-15) which breaks things.
-    cost = get_position_cost(fills, Float.round(holding, 10))
-    {ccy, holding, cost, value}
+    {cost, fees} = get_position_cost(fills, Float.round(holding, 10))
+    {ccy, holding, cost, fees, value}
   end
 end
