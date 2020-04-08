@@ -48,11 +48,11 @@ defmodule GDAX do
                       "\n\t Fee: ", fmt(fees), " EUR",
                       "\n\t Value: ", fmt(value,2), " EUR",
                       "\n\t Estimated close fee: ", fmt(close_fees,2), " EUR",
-                      "\n\t NET spot P/L (% gain): ", fmt(net_pl, 2), " EUR (",
+                      "\n\t Gross spot P/L (% gain): ", fmt(net_pl, 2), " EUR (",
                           fmt(net_percentage_gain, 2), "%)",
-                      "\n\t Gross spot P/L (% gain): ", fmt(gross_pl, 2), " EUR (",
+                      "\n\t Net spot P/L (% gain less purchase fee): ", fmt(gross_pl, 2), " EUR (",
                           fmt(gross_percentage_gain, 2), "%)",
-                      "\n\t Gross close-out P/L (% gain): ", fmt(closed_pl, 2), " EUR (",
+                      "\n\t Net close-out P/L (% gain less txn fees): ", fmt(closed_pl, 2), " EUR (",
                           fmt(closed_pl_percentage_gain, 2), "%)"])
     IO.puts ""
   end
@@ -103,9 +103,9 @@ defmodule GDAX do
       Fee is the fee on entering the transaction
       Value is current spot value
       Estimated close fee would be fee charged on spot value transaction
-      Net spot PL is P/L excluding fees
-      Gross spot P/L is P/L including fees for entering transaction, but not exit fees
-      Gross close-out P/L is P/L with entry and estimated exit fees included.
+      Gross spot PL is P/L excluding all fees
+      Net spot P/L is P/L with fees for entering transaction subtracted, but not exit fees
+      Net close-out P/L is P/L with entry and estimated exit fees subtracted.
       """
 
     currencies |> show_summary
