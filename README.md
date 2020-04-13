@@ -58,7 +58,8 @@ edit, inserting your API key, secret and passphrase in the appropriate spots.
 Compile with:
 
 ```bash
-> mix deps.install
+> mix deps.get
+> mix deps.compile
 > mix escript.build
 ```
 
