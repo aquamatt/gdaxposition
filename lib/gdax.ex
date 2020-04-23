@@ -53,11 +53,26 @@ defmodule GDAX do
     break_even = -1 * cost / (0.995 * holding) 
     gross_spread = break_even - buy_price
 
+    # Profit bands - price to sell at which to achieve given net profit
+    profit_05 = (buy_price * 1.05 * 1.005) / 0.995
+    profit_10 = (buy_price * 1.1 * 1.005) / 0.995
+    profit_20 = (buy_price * 1.2 * 1.005) / 0.995
+
+    loss_05 = (buy_price * 0.95 * 1.005) / 0.995
+    loss_10 = (buy_price * 0.90 * 1.005) / 0.995
+    loss_20 = (buy_price * 0.80 * 1.005) / 0.995
+
     IO.write(:stdio, [ccy, " Holding: ", fmt(holding),
                       "\n\t Effective purchase rate: ", fmt(buy_price), " EUR/unit",
                       "\n\t Effective spot rate: ", fmt(spot_price), " EUR/unit",
                       "\n\t Break-even price (including fees): ", fmt(break_even), " EUR/unit",
                       "\n\t => Gross spread: ", fmt(gross_spread), " EUR",
+                      "\n\t  20% net at price: ", fmt(profit_20), " EUR/unit",
+                      "\n\t  10% net at price: ", fmt(profit_10), " EUR/unit",
+                      "\n\t   5% net at price: ", fmt(profit_05), " EUR/unit",
+                      "\n\t  -5% net at price: ", fmt(loss_05), " EUR/unit",
+                      "\n\t -10% net at price: ", fmt(loss_10), " EUR/unit",
+                      "\n\t -20% net at price: ", fmt(loss_20), " EUR/unit",
                       "\n\t Net Cost: ", fmt(net_cost), " EUR",
                       "\n\t Fee: ", fmt(fees), " EUR",
                       "\n\t Value: ", fmt(value,2), " EUR",
