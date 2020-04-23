@@ -43,7 +43,21 @@ defmodule GDAX do
         cost -> -100*(closed_pl/cost)
     end
 
+    # effective purchase price (ex fees)
+    buy_price = -1 * (net_cost / holding)
+
+    # effective spot rate (ex fees)
+    spot_price = value / holding
+
+    # calculate break-even price
+    break_even = -1 * cost / (0.995 * holding) 
+    gross_spread = break_even - buy_price
+
     IO.write(:stdio, [ccy, " Holding: ", fmt(holding),
+                      "\n\t Effective purchase rate: ", fmt(buy_price), " EUR/unit",
+                      "\n\t Effective spot rate: ", fmt(spot_price), " EUR/unit",
+                      "\n\t Break-even price (including fees): ", fmt(break_even), " EUR/unit",
+                      "\n\t => Gross spread: ", fmt(gross_spread), " EUR",
                       "\n\t Net Cost: ", fmt(net_cost), " EUR",
                       "\n\t Fee: ", fmt(fees), " EUR",
                       "\n\t Value: ", fmt(value,2), " EUR",
