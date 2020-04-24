@@ -1,0 +1,83 @@
+#!/bin/bash
+help() {
+ echo " "
+ echo " Run the GDAX tool in docker"
+ echo " "
+ echo " Before first execution, create config from example in config "
+ echo " as per instructions in README.md "
+ echo " "
+ echo " General usage. All arguments as per 'gdax', ie if you want "
+ echo " to see your BTC holding: "
+ echo " "
+ echo " $ ./dockerdax btc "
+ echo " "
+ echo " If you want to see your aggregat position across BTC, BCH and LTC:"
+ echo " "
+ echo " $ ./dockerdax btc bch ltc"
+ echo " "
+ echo " Full set of options:"
+ echo " "
+ echo " dockerdax -h                     Show this help "
+ echo " dockerdax <list of ccys>         Show position for currencies"
+ echo " dockerdax -s                     Run only the setup.sh script"
+ echo " dockerdax -c                     Compile the application"
+ echo " dockerdax -i                     Run bash shell in container"
+ echo " "
+}
+
+CONTAINER="elixir:latest"
+DCMD="docker run -it --rm --name gdax --volume `pwd`:/src -w /src $CONTAINER"
+
+setup() {
+  # setup the environment
+  $DCMD ./setup.sh
+}
+
+build() {
+  # recompile the gdax application
+  $DCMD mix escript.build
+}
+
+ishell() {
+  $DCMD /bin/bash
+}
+
+run() {
+  if [ ! -x "./gdax"  ]
+  then
+      echo "** Looks like GDAX has not been built! Let's fix that first. "
+      echo ""
+      setup
+  fi
+  $DCMD ./gdax $@
+}
+
+## Parse input.
+
+while getopts "hsci" opt
+do
+    case $opt in
+        h) help
+           exit 0
+           ;;
+        s) setup
+           exit $?
+           ;;
+        c) build
+           exit $?
+           ;;
+        i) ishell
+           exit 0
+           ;;
+       \?) echo "Invalid option: -${opt}" >&2
+           help
+           exit 1
+           ;;
+    esac
+done
+
+
+# shift out processed options
+shift $((OPTIND-1))
+
+run $@

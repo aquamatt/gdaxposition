@@ -25,9 +25,12 @@ Future tweaks will be to make the application do more than a one shot valuation
 and present a live update as order book updates flow in over the websocket
 feed.
 
+# Setup
+
 ## Dependencies
 
-This project is known to work with:
+If not using Docker you will need to install Elixir. This project is known to
+work with:
 
  * Erlang 21.1.4 + Elixir 1.7.4
  * Erlang 22.2.8 + Elixir 1.10.2
@@ -35,6 +38,13 @@ This project is known to work with:
 The author works on Linux Mint and found that the easiest way to get working
 installations of the appropriate versions of these packages was to use the
 `asdf` packaging tool. Install asdf from instructions here: https://github.com/asdf-vm/asdf
+
+## Local configuration
+
+Copy the `config/local_config.exs.example` to `config/local_config.exs` and
+edit, inserting your API key, secret and passphrase in the appropriate spots.
+
+# To run locally
 
 Install erlang, elixir:
 
@@ -52,9 +62,6 @@ Install erlang, elixir:
 
 ## Compilation
 
-Copy the `config/local_config.exs.example` to `config/local_config.exs` and
-edit, inserting your API key, secret and passphrase in the appropriate spots.
-
 Compile with:
 
 ```bash
@@ -65,14 +72,39 @@ Compile with:
 
 The `gdax` binary should be created.
 
-## Usage
+# To run in docker
 
-Proved `gdax` with a list of crypto currencies that you have traded, or for
+If you have docker installed the `dockerdax` script can be used to compile
+and execute the application within an elixir container. This may be the easiest
+way to get started. The source directory is mounted from you host (the
+directory in which this README is found).
+
+Using `dockerdax` is simple:
+
+1) Create a configuration file from the supplied template as described above
+   in 'Local configuration'.
+
+2) Use `dockerdax` as you would `gdax` (see below). On first run it will
+   install dependencies and build the application.
+
+For example:
+
+```bash
+> dockerdax btc
+```
+
+to see your BTC position.
+
+Use `dockerdax -h` to see other options.
+
+# Usage
+
+Provide `gdax` with a list of crypto currencies that you have traded, or for
 which you want to see the positions and stats. Trades are assumed (hard coded)
 for EUR pairs, e.g. the following:
 
 ```bash
-> ./gdax btc ltc
+> ./gdax btc ltc       # use dockerdax instead if running in docker
 ```
 
 will show all trades for BTCEUR and LTCEUR, because that's what I was
